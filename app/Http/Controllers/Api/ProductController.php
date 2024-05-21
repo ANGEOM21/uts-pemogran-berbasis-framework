@@ -51,14 +51,13 @@ class ProductController extends Controller
         }
 
         $hash_image = $request->image->hashName();
-        $request->image->move(public_path('uploads/images/products'), $hash_image);
-        $image = 'uploads/images/products/' . $hash_image;
+        $request->image->move(public_path('images/products'), $hash_image);
 
         Products::create([
             'name' => $request->name,
             'description' => $request->description,
             'price' => $request->price,
-            'image' => $image,
+            'image' => $hash_image,
             'category_id' => $category->id,
             'expired_at' => $request->expired_at,
             'modifed_by' => auth()->user()->email
@@ -113,9 +112,9 @@ class ProductController extends Controller
 
         if ($request->file('image')) {
             $image = $request->file('image');
-            $image_name = $image->getClientOriginalName();
-            $image->move(public_path('uploads/images/products'), $image_name);
-            unlink(public_path('uploads/images/products' . $old_image));
+            $image_name = $image->hashName();
+            $image->move(public_path('images/products'), $image_name);
+            unlink(public_path('images/products/' . $old_image));
 
             $product->update([
                 'image' => $image_name,

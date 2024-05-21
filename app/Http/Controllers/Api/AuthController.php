@@ -113,7 +113,11 @@ class AuthController extends Controller
             $userdata = $response->json();
 
             if (isset($userdata['error'])) {
-                return response()->json(['status' => false, 'message' => $userdata['error']]);
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Invalid access token or invalid credentials',
+                    'errors' => $userdata['error']
+                ]);
             }
 
             $user = User::where('email', $userdata['email'])->first();
